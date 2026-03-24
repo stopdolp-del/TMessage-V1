@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TMessage - Real-time Chat</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Auth Views -->
+    <div id="authView" class="view active">
+        <div class="auth-container">
+            <div class="auth-card">
+                <h1>TMessage</h1>
+                <div class="auth-tabs">
+                    <button class="tab-btn active" data-tab="login">Login</button>
+                    <button class="tab-btn" data-tab="register">Register</button>
+                </div>
+
+                <!-- Login Tab -->
+                <div id="loginTab" class="tab-content active">
+                    <form id="loginForm">
+                        <input type="email" id="loginEmail" placeholder="Email" required>
+                        <input type="password" id="loginPassword" placeholder="Password" required>
+                        <button type="submit" class="btn-primary">Login</button>
+                        <p id="loginError" class="error-msg"></p>
+                    </form>
+                </div>
+
+                <!-- Register Tab -->
+                <div id="registerTab" class="tab-content">
+                    <form id="registerForm">
+                        <input type="text" id="regUsername" placeholder="Username" required>
+                        <input type="email" id="regEmail" placeholder="Email" required>
+                        <input type="password" id="regPassword" placeholder="Password" required>
+                        <div class="captcha-group">
+                            <div class="captcha-question" id="captchaQuestion"></div>
+                            <input type="text" id="captchaAnswer" placeholder="Answer" required>
+                        </div>
+                        <button type="button" id="newCaptchaBtn" class="btn-secondary">New Question</button>
+                        <button type="submit" class="btn-primary">Register</button>
+                        <p id="registerError" class="error-msg"></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat View -->
+    <div id="chatView" class="view">
+        <div class="chat-container">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <h2>TMessage</h2>
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar" id="sidebarUserAvatar">👤</div>
+                    <div class="user-details">
+                        <p class="username" id="sidebarUsername">User</p>
+                        <small id="onlineStatus" class="status online">Online</small>
+                    </div>
+                </div>
+                <nav class="sidebar-nav">
+                    <button class="nav-btn active" data-tab="chat">Chat</button>
+                    <button class="nav-btn" data-tab="profile">Profile</button>
+                    <button class="nav-btn admin-only hidden" id="adminPanelBtn" data-tab="admin">Admin Panel</button>
+                </nav>
+                <button id="logoutBtn" class="btn-logout">Logout</button>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Chat Tab -->
+                <section id="chatTab" class="tab-section active">
+                    <div class="chat-header">
+                        <h3>Chat Room</h3>
+                        <div class="online-count" id="onlineCount">0 online</div>
+                    </div>
+                    <div id="messagesContainer" class="messages-container">
+                        <div class="messages-loading">Loading messages...</div>
+                    </div>
+                    <div class="message-input-area">
+                        <input type="text" id="messageInput" placeholder="Type a message..." maxlength="500">
+                        <button id="emojiBtn" class="btn-emoji">😊</button>
+                        <button id="sendBtn" class="btn-send">Send</button>
+                    </div>
+                </section>
+
+                <!-- Profile Tab -->
+                <section id="profileTab" class="tab-section">
+                    <div class="profile-container">
+                        <h3>My Profile</h3>
+                        <div class="profile-content">
+                            <div class="avatar-section">
+                                <div class="avatar-large" id="profileAvatar">👤</div>
+                                <input type="file" id="avatarInput" accept="image/*" style="display:none;">
+                                <button id="uploadAvatarBtn" class="btn-secondary">Upload Avatar</button>
+                            </div>
+                            <form id="profileForm" class="profile-form">
+                                <div class="form-group">
+                                    <label>Username</label>
+                                    <input type="text" id="profileUsername" placeholder="Username" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Bio</label>
+                                    <textarea id="profileBio" placeholder="Tell about yourself" maxlength="200"></textarea>
+                                </div>
+                                <button type="submit" class="btn-primary">Save Profile</button>
+                                <p id="profileMsg" class="msg"></p>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Admin Panel Tab -->
+                <section id="adminTab" class="tab-section">
+                    <div class="admin-container">
+                        <h3>Admin Panel</h3>
+                        <div class="admin-content">
+                            <h4>Users</h4>
+                            <div id="usersTableContainer" class="users-table-container">
+                                <table class="users-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Username</th>
+                                            <th>Email</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="usersTableBody">
+                                        <tr><td colspan="4">Loading users...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- Emoji Picker Modal -->
+    <div id="emojiModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Emoji Picker</h4>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="emoji-grid" id="emojiGrid">
+                😀😃😄😁😆😅🤣😂🙂🙃😉😊😇🥰😍🤩😘😗😚😙🥲😋😛😜🤪😌😔😑😐😏😒🙁😞😖😤😠😠🤬😤😡😠😠🤯😳😨😰😢😭😱😖😣😞😓😩😫🥱😤😤😡😠😠🤐😒😑😐🥻😯😮😲😟😕🙁☹️😲😳😦😧😨😰😥😢😭😱😖😣😞😓😩😫😤😡😠🤬😤😤😤😣😖😞😓😩😫😤😡😠
+            </div>
+        </div>
+    </div>
+
+    <!-- Ban Modal -->
+    <div id="banModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Ban User</h4>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="banUserId">
+                <p id="banUsername">User</p>
+                <textarea id="banReason" placeholder="Ban reason..." maxlength="200" required></textarea>
+            </div>
+            <div class="modal-footer">
+                <button id="cancelBanBtn" class="btn-secondary">Cancel</button>
+                <button id="confirmBanBtn" class="btn-primary">Ban User</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
