@@ -120,8 +120,8 @@ router.post('/login', (req, res) => {
         }
       });
     });
-  } console.error('Login route error:', error);
-    catch (error) {
+  } catch (error) {
+    console.error('Login route error:', error);
     res.status(500).json({ error: 'Server error' });
   }
 });
